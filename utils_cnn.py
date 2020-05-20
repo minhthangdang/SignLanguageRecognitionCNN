@@ -50,14 +50,14 @@ def create_placeholders(n_H0, n_W0, n_C0, n_y):
 def initialize_parameters():
 	"""
 	Initializes weight parameters to build a neural network with tensorflow. The shapes are:
-	                    W1 : [4, 4, 1, 8]
-	                    W2 : [2, 2, 8, 16]
+	                    W1 : [3, 3, 1, 6]
+	                    W2 : [5, 5, 6, 16]
 	Returns:
 	parameters -- a dictionary of tensors containing W1, W2
 	"""
     
-	W1 = tf.get_variable(name="W1", shape=[4, 4, 1, 8], initializer = tf.contrib.layers.xavier_initializer())
-	W2 = tf.get_variable(name="W2", shape=[2, 2, 8, 16], initializer = tf.contrib.layers.xavier_initializer())
+	W1 = tf.get_variable(name="W1", shape=[3, 3, 1, 6], initializer = tf.contrib.layers.xavier_initializer())
+	W2 = tf.get_variable(name="W2", shape=[5, 5, 6, 16], initializer = tf.contrib.layers.xavier_initializer())
 
 	parameters = {"W1": W1,
 	              "W2": W2}
@@ -86,21 +86,23 @@ def forward_propagation(X, parameters):
 	Z1 = tf.nn.conv2d(X, W1, strides = [1, 1, 1, 1], padding = 'SAME')
 	# RELU
 	A1 = tf.nn.relu(Z1)
-	# MAXPOOL: window 8x8, stride 8, padding 'SAME'
-	P1 = tf.nn.max_pool(A1, ksize = [1, 8, 8, 1], strides = [1, 8, 8, 1], padding = 'SAME')
-	# CONV2D: filters W2, stride 1, padding 'SAME'
-	Z2 = tf.nn.conv2d(P1, W2, strides=[1, 1, 1, 1], padding = 'SAME')
+	# MAXPOOL: window 2x2, stride 2, padding 'VALID'
+	P1 = tf.nn.max_pool(A1, ksize = [1, 2, 2, 1], strides = [1, 2, 2, 1], padding = 'VALID')
+	# CONV2D: filters W2, stride 1, padding 'VALID'
+	Z2 = tf.nn.conv2d(P1, W2, strides=[1, 1, 1, 1], padding = 'VALID')
 	# RELU
 	A2 = tf.nn.relu(Z2)
-	# MAXPOOL: window 4x4, stride 4, padding 'SAME'
-	P2 = tf.nn.max_pool(A2, ksize = [1, 4, 4, 1], strides = [1, 4, 4, 1], padding = 'SAME')
+	# MAXPOOL: window 2x2, stride 2, padding 'VALID'
+	P2 = tf.nn.max_pool(A2, ksize = [1, 2, 2, 1], strides = [1, 2, 2, 1], padding = 'VALID')
 	# FLATTEN
 	F = tf.contrib.layers.flatten(P2)
 	# FULLY-CONNECTED without non-linear activation function (not not call softmax).
 	# 24 neurons in output layer.
-	Z3 = tf.contrib.layers.fully_connected(F, 24, activation_fn=None)
+	Z3 = tf.contrib.layers.fully_connected(F, 120, activation_fn=None)
+	Z4 = tf.contrib.layers.fully_connected(Z3, 84, activation_fn=None)
+	Z5 = tf.contrib.layers.fully_connected(Z4, 24, activation_fn=None)
 
-	return Z3
+	return Z5
 
 def compute_cost(Z3, Y):
 	"""

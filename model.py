@@ -4,8 +4,8 @@ import tensorflow as tf
 from tensorflow.python.framework import ops
 from utils_cnn import create_placeholders, initialize_parameters, forward_propagation, compute_cost, random_mini_batches
 
-def model(X_train, Y_train, X_test, Y_test, learning_rate = 0.009,
-          num_epochs = 100, minibatch_size = 64, print_cost = True):
+def model(X_train, Y_train, X_test, Y_test, learning_rate = 0.0001,
+          num_epochs = 30, minibatch_size = 64, print_cost = True):
     """
     Implements a three-layer ConvNet in Tensorflow:
     CONV2D -> RELU -> MAXPOOL -> CONV2D -> RELU -> MAXPOOL -> FLATTEN -> FULLYCONNECTED
