@@ -117,7 +117,7 @@ def compute_cost(Z3, Y):
 
 	return cost
 
-def random_mini_batches(X, Y, mini_batch_size = 64, seed = 0):
+def random_mini_batches(X, Y, mini_batch_size = 64):
 	"""
 	Creates a list of random minibatches from (X, Y)
 
@@ -132,7 +132,6 @@ def random_mini_batches(X, Y, mini_batch_size = 64, seed = 0):
 
 	m = X.shape[1]                  # number of training examples
 	mini_batches = []
-	np.random.seed(seed)
 
 	# Step 1: Shuffle (X, Y)
 	permutation = list(np.random.permutation(m))
