@@ -35,7 +35,7 @@ CONV2D -> RELU -> MAXPOOL -> CONV2D -> RELU -> MAXPOOL -> FLATTEN -> FULLYCONNEC
 
 The architecture is depicted below:
 
-<img src="https://github.com/minhthangdang/minhthangdang.github.io/blob/master/conv-net-sign.JPG?raw=true" alt="Convolutional Network Architecture"/><br>
+<img src="https://github.com/minhthangdang/minhthangdang.github.io/blob/master/conv-net-sign-1.JPG?raw=true" alt="Convolutional Network Architecture"/><br>
 
 The hyperparameter values are learning_rate = 0.0001, num_epochs = 30, minibatch_size = 64,
 and optimizer = AdamOptimizer.
