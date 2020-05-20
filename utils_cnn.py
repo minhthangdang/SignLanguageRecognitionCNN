@@ -9,16 +9,18 @@ def load_dataset():
 	train_set_y_orig = labels = train_dataset['label'].values # train set labels
 	train_dataset.drop('label', axis = 1, inplace = True) # drop the label coloumn from the training set
 	train_set_x_orig = train_dataset.values # train set features
-	# convert X to (n, m) vector where n is number of features, m is number of examples
-	train_set_x_orig = train_set_x_orig.T
+	# convert X to (m, n_H, n_W, n_C) where 
+	# m is number of examples, n_H is height, n_W is width and n_C is number of channels
+	train_set_x_orig = train_set_x_orig.reshape((train_set_x_orig.shape[0], 28, 28, 1))
 
 	# read test dataset
 	test_dataset = pd.read_csv('sign_mnist_test.csv')
 	test_set_y_orig = test_dataset['label'].values # test set labels
 	test_dataset.drop('label', axis = 1, inplace = True) # drop the label coloumn from the test set
 	test_set_x_orig = test_dataset.values # test set features
-	# convert X to (n, m) vector where n is number of features, m is number of examples
-	test_set_x_orig = test_set_x_orig.T
+	# convert X to (m, n_H, n_W, n_C) where 
+	# m is number of examples, n_H is height, n_W is width and n_C is number of channels
+	test_set_x_orig = test_set_x_orig.reshape((test_set_x_orig.shape[0], 28, 28, 1))
 
 	classes = np.array(labels)
 	classes = np.unique(classes)
@@ -48,13 +50,13 @@ def create_placeholders(n_H0, n_W0, n_C0, n_y):
 def initialize_parameters():
 	"""
 	Initializes weight parameters to build a neural network with tensorflow. The shapes are:
-	                    W1 : [4, 4, 3, 8]
+	                    W1 : [4, 4, 1, 8]
 	                    W2 : [2, 2, 8, 16]
 	Returns:
 	parameters -- a dictionary of tensors containing W1, W2
 	"""
     
-	W1 = tf.get_variable(name="W1", shape=[4, 4, 3, 8], initializer = tf.contrib.layers.xavier_initializer())
+	W1 = tf.get_variable(name="W1", shape=[4, 4, 1, 8], initializer = tf.contrib.layers.xavier_initializer())
 	W2 = tf.get_variable(name="W2", shape=[2, 2, 8, 16], initializer = tf.contrib.layers.xavier_initializer())
 
 	parameters = {"W1": W1,
@@ -122,34 +124,34 @@ def random_mini_batches(X, Y, mini_batch_size = 64):
 	Creates a list of random minibatches from (X, Y)
 
 	Arguments:
-	X -- input data, of shape (input size, number of examples)
-	Y -- one-hot matrix
+	X -- input data, of shape (input size, number of examples) (m, Hi, Wi, Ci)
+	Y -- true "label" vector of shape (m, n_y)
 	mini_batch_size - size of the mini-batches, integer
 
 	Returns:
 	mini_batches -- list of synchronous (mini_batch_X, mini_batch_Y)
 	"""
 
-	m = X.shape[1]                  # number of training examples
+	m = X.shape[0]                  # number of training examples
 	mini_batches = []
 
 	# Step 1: Shuffle (X, Y)
 	permutation = list(np.random.permutation(m))
-	shuffled_X = X[:, permutation]
-	shuffled_Y = Y[:, permutation].reshape((Y.shape[0],m))
+	shuffled_X = X[permutation,:,:,:]
+	shuffled_Y = Y[permutation,:]
 
 	# Step 2: Partition (shuffled_X, shuffled_Y). Minus the end case.
-	num_complete_minibatches = math.floor(m/mini_batch_size) # number of mini batches of size mini_batch_size
+	num_complete_minibatches = math.floor(m/mini_batch_size) # number of mini batches of size mini_batch_size in your partitionning
 	for k in range(0, num_complete_minibatches):
-		mini_batch_X = shuffled_X[:, k * mini_batch_size : k * mini_batch_size + mini_batch_size]
-		mini_batch_Y = shuffled_Y[:, k * mini_batch_size : k * mini_batch_size + mini_batch_size]
+		mini_batch_X = shuffled_X[k * mini_batch_size : k * mini_batch_size + mini_batch_size,:,:,:]
+		mini_batch_Y = shuffled_Y[k * mini_batch_size : k * mini_batch_size + mini_batch_size,:]
 		mini_batch = (mini_batch_X, mini_batch_Y)
 		mini_batches.append(mini_batch)
 
 	# Handling the end case (last mini-batch < mini_batch_size)
 	if m % mini_batch_size != 0:
-		mini_batch_X = shuffled_X[:, num_complete_minibatches * mini_batch_size : m]
-		mini_batch_Y = shuffled_Y[:, num_complete_minibatches * mini_batch_size : m]
+		mini_batch_X = shuffled_X[num_complete_minibatches * mini_batch_size : m,:,:,:]
+		mini_batch_Y = shuffled_Y[num_complete_minibatches * mini_batch_size : m,:]
 		mini_batch = (mini_batch_X, mini_batch_Y)
 		mini_batches.append(mini_batch)
 

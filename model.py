@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow.python.framework import ops
-from utils import create_placeholders, initialize_parameters, forward_propagation, compute_cost, random_mini_batches
+from utils_cnn import create_placeholders, initialize_parameters, forward_propagation, compute_cost, random_mini_batches
 
 def model(X_train, Y_train, X_test, Y_test, learning_rate = 0.009,
           num_epochs = 100, minibatch_size = 64, print_cost = True):
@@ -27,7 +27,7 @@ def model(X_train, Y_train, X_test, Y_test, learning_rate = 0.009,
     """
     
     ops.reset_default_graph()                         # to be able to rerun the model without overwriting tf variables
-    (m, n_H0, n_W0, n_C0) = X_train.shape             
+    (m, n_H0, n_W0, n_C0) = X_train.shape           
     n_y = Y_train.shape[1]                            
     costs = []                                        # To keep track of the cost
     
@@ -60,7 +60,6 @@ def model(X_train, Y_train, X_test, Y_test, learning_rate = 0.009,
 
             minibatch_cost = 0.
             num_minibatches = int(m / minibatch_size) # number of minibatches of size minibatch_size in the train set
-            seed = seed + 1
             minibatches = random_mini_batches(X_train, Y_train, minibatch_size)
 
             for minibatch in minibatches:
