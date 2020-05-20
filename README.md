@@ -40,7 +40,9 @@ The architecture is depicted below:
 The hyperparameter values are learning_rate = 0.0001, num_epochs = 30, minibatch_size = 64,
 and optimizer = AdamOptimizer.
 
-This is the result:
+The program is written in Python and Tensorflow 1.x
+
+The result is:
 
 <img src="https://github.com/minhthangdang/minhthangdang.github.io/blob/master/sign-cost-cnn.JPG?raw=true" alt="Cost Function Plot" width="400"/><br>
 
@@ -49,7 +51,7 @@ Train Accuracy: 1.0
 Test Accuracy: 0.89445066
 ```
 
-You can see it achieved very good results. Compared to my first deep learning model for the same task (https://github.com/minhthangdang/SignLanguageRecognition), this model is not only better in accuracy, but also faster in training time with much lower number of epochs.
+Even though it is a relatively simple network, it achieved very good results. Compared to my first deep learning model for the same task (https://github.com/minhthangdang/SignLanguageRecognition), this model is not only better in accuracy, but also faster in training time with much lower number of epochs.
 
 This is one of my repositories in a series of deep learning exercises. Please check out
 my other repositories to see more.
