@@ -6,11 +6,15 @@ from model import model
 
 X_train_orig, Y_train_orig, X_test_orig, Y_test_orig, classes = load_dataset()
 
-# Example of a picture
-#index = 1 # change the index to see another picture
-#plt.imshow(X_train_orig[:, index].reshape((28, 28)))
-#plt.show()
-#print ("y = " + str(np.squeeze(Y_train_orig[index])))
+# Example of pictures
+ROWS = 10
+fig, axes = plt.subplots(ROWS, ROWS, figsize=(10, 10))
+for i in range(ROWS):
+	for j in range(ROWS):
+		k = np.random.choice(range(X_train_orig.shape[0]))
+		axes[i][j].set_axis_off()
+		axes[i][j].imshow(X_train_orig[k].reshape((28, 28)))
+plt.show()
 
 # Normalize image vectors
 X_train = X_train_orig/255.
